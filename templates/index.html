@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Log Lab Buttons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    .row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    button { padding: 0.7rem 1rem; font-size: 1rem; cursor: pointer; }
+    .note { margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    input { padding: 0.6rem; font-size: 1rem; width: 22rem; max-width: 100%; }
+    pre { margin-top: 1rem; padding: 1rem; background: #f6f6f6; border: 1px solid #ddd; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>Log Lab Buttons</h1>
+  <p>Click a button to generate an application log line at that level.</p>
+
+  <div class="note">
+    <label for="note">Optional note:</label>
+    <input id="note" type="text" placeholder="e.g., testing warning path" />
+  </div>
+
+  <div class="row" style="margin-top: 1rem;">
+    <button onclick="send('debug')">Debug</button>
+    <button onclick="send('info')">Info</button>
+    <button onclick="send('warning')">Warning</button>
+    <button onclick="send('error')">Error</button>
+    <button onclick="send('critical')">Critical</button>
+    <button onclick="demoError()">Trigger Server Error</button>
+  </div>
+
+  <pre id="out">Ready.</pre>
+
+  <script>
+    async function send(level) {
+      const note = document.getElementById('note').value;
+      const res = await fetch(`/api/log/${level}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Request-ID": crypto.randomUUID() },
+        body: JSON.stringify({ note })
+      });
+      const data = await res.json();
+      document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function demoError() {
+      const res = await fetch(`/api/error-demo`, { method: "GET", headers: { "X-Request-ID": crypto.randomUUID() } });
+      document.getElementById('out').textContent =
+        `HTTP ${res.status}\nNow check nginx error logs and app.log for details.`;
+    }
+  </script>
+</body>
+</html>
