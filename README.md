@@ -37,15 +37,15 @@ If it does not appear in a command block, you are not expected to type it.
 1. Click each log level button once.
 1. For each click, locate the corresponding entry in `logs/app.log`.
 1. Answer the following for each entry:
- - What happened?
- - When did it happen?
- - What log level was used?
- - What URL path was accessed?
+   - What happened?
+   - When did it happen?
+   - What log level was used?
+   - What URL path was accessed?
 1. Trigger the “Server Error” button.
 1. Compare what appears in:
- - The application log
- - The nginx access log
- - The nginx error log
+   - The application log
+   - The nginx access log
+   - The nginx error log
 
 ## Task Details
 # Step 1: Verify Python 3 Is Installed
